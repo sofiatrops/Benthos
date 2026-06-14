@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="Testcontainers.PostgreSql" />
+    <PackageReference Include="Npgsql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\BuildingBlocks\Bep.Infrastructure.Common\Bep.Infrastructure.Common.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Organization\Bep.Modules.Organization.Infrastructure\Bep.Modules.Organization.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Audit\Bep.Modules.Audit.Infrastructure\Bep.Modules.Audit.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Campaign\Bep.Modules.Campaign.Infrastructure\Bep.Modules.Campaign.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Sampling\Bep.Modules.Sampling.Infrastructure\Bep.Modules.Sampling.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

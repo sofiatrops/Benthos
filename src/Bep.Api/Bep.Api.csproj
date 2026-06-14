@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup Label="API / OpenAPI / Auth">
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+  </ItemGroup>
+
+  <ItemGroup Label="Observabilidad">
+    <PackageReference Include="Serilog.AspNetCore" />
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" />
+    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" />
+  </ItemGroup>
+
+  <ItemGroup Label="Migraciones EF Core (dotnet ef)">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup Label="Trabajos en segundo plano (encolado desde la API)">
+    <PackageReference Include="Hangfire.AspNetCore" />
+    <PackageReference Include="Hangfire.PostgreSql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BuildingBlocks\Bep.Infrastructure.Common\Bep.Infrastructure.Common.csproj" />
+    <ProjectReference Include="..\Modules\Organization\Bep.Modules.Organization.Infrastructure\Bep.Modules.Organization.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\Audit\Bep.Modules.Audit.Infrastructure\Bep.Modules.Audit.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\Campaign\Bep.Modules.Campaign.Infrastructure\Bep.Modules.Campaign.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\Sampling\Bep.Modules.Sampling.Infrastructure\Bep.Modules.Sampling.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

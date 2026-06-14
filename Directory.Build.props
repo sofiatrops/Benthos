@@ -1,0 +1,19 @@
+<Project>
+
+  <!--
+    Configuración común a toda la solución BEP.
+    TargetFramework: net10.0 (LTS, soporte hasta nov-2028). Ver ADR-009:
+    el SRS especificaba .NET 9, pero quedó fuera de soporte (STS) en may-2026.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+</Project>

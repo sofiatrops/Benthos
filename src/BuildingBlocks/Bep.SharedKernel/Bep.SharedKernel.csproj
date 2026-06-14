@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Dominio puro: sin dependencias externas (Clean Architecture, SRS 2.7.1). -->
+
+</Project>

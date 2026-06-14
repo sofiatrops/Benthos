@@ -1,0 +1,40 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+
+[*.{cs,csx}]
+indent_size = 4
+# Convenciones C# (verificadas en CI con dotnet format, RNF-MANT-003)
+dotnet_sort_system_directives_first = true
+csharp_using_directive_placement = outside_namespace:warning
+csharp_style_namespace_declarations = file_scoped:warning
+dotnet_style_require_accessibility_modifiers = always:warning
+# 'Error' como nombre de tipo (DDD) choca con palabra reservada de VB; no aplica.
+dotnet_diagnostic.CA1716.severity = none
+# LoggerMessage delegates: micro-optimización no justificada en esta etapa (KISS).
+dotnet_diagnostic.CA1848.severity = none
+# Evaluación de argumentos de log: aceptable en handlers de baja frecuencia.
+dotnet_diagnostic.CA1873.severity = none
+
+[*.{csproj,props,targets,slnx}]
+indent_size = 2
+
+[*.{json,yml,yaml}]
+indent_size = 2
+
+[*.{ts,html,scss,css}]
+indent_size = 2
+
+# Migraciones EF Core: código generado, se excluye del análisis de estilo/calidad.
+[**/Migrations/*.cs]
+generated_code = true
+
+# Proyectos de prueba: nombres de método con guiones bajos son idiomáticos (xUnit).
+[tests/**/*.cs]
+dotnet_diagnostic.CA1707.severity = none
+dotnet_diagnostic.CA1822.severity = none

@@ -1,0 +1,41 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Bep.Api/Bep.Api.csproj" />
+    <Project Path="src/Bep.Worker/Bep.Worker.csproj" />
+  </Folder>
+  <Folder Name="/src/BuildingBlocks/">
+    <Project Path="src/BuildingBlocks/Bep.Application.Abstractions/Bep.Application.Abstractions.csproj" />
+    <Project Path="src/BuildingBlocks/Bep.Infrastructure.Common/Bep.Infrastructure.Common.csproj" />
+    <Project Path="src/BuildingBlocks/Bep.SharedKernel/Bep.SharedKernel.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/" />
+  <Folder Name="/src/Modules/Audit/">
+    <Project Path="src/Modules/Audit/Bep.Modules.Audit.Infrastructure/Bep.Modules.Audit.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Campaign/">
+    <Project Path="src/Modules/Campaign/Bep.Modules.Campaign.Application/Bep.Modules.Campaign.Application.csproj" />
+    <Project Path="src/Modules/Campaign/Bep.Modules.Campaign.Domain/Bep.Modules.Campaign.Domain.csproj" />
+    <Project Path="src/Modules/Campaign/Bep.Modules.Campaign.Infrastructure/Bep.Modules.Campaign.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Organization/">
+    <Project Path="src/Modules/Organization/Bep.Modules.Organization.Application/Bep.Modules.Organization.Application.csproj" />
+    <Project Path="src/Modules/Organization/Bep.Modules.Organization.Domain/Bep.Modules.Organization.Domain.csproj" />
+    <Project Path="src/Modules/Organization/Bep.Modules.Organization.Infrastructure/Bep.Modules.Organization.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Reporting/">
+    <Project Path="src/Modules/Reporting/Bep.Modules.Reporting.Application/Bep.Modules.Reporting.Application.csproj" />
+    <Project Path="src/Modules/Reporting/Bep.Modules.Reporting.Domain/Bep.Modules.Reporting.Domain.csproj" />
+    <Project Path="src/Modules/Reporting/Bep.Modules.Reporting.Infrastructure/Bep.Modules.Reporting.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Sampling/">
+    <Project Path="src/Modules/Sampling/Bep.Modules.Sampling.Application/Bep.Modules.Sampling.Application.csproj" />
+    <Project Path="src/Modules/Sampling/Bep.Modules.Sampling.Domain/Bep.Modules.Sampling.Domain.csproj" />
+    <Project Path="src/Modules/Sampling/Bep.Modules.Sampling.Infrastructure/Bep.Modules.Sampling.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Bep.IntegrationTests/Bep.IntegrationTests.csproj" />
+    <Project Path="tests/Bep.Modules.Campaign.Domain.Tests/Bep.Modules.Campaign.Domain.Tests.csproj" />
+    <Project Path="tests/Bep.Modules.Organization.Domain.Tests/Bep.Modules.Organization.Domain.Tests.csproj" />
+    <Project Path="tests/Bep.Modules.Sampling.Domain.Tests/Bep.Modules.Sampling.Domain.Tests.csproj" />
+  </Folder>
+</Solution>

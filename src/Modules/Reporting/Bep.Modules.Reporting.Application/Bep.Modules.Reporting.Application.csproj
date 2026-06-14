@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" />
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Bep.Modules.Reporting.Domain\Bep.Modules.Reporting.Domain.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\Bep.Application.Abstractions\Bep.Application.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

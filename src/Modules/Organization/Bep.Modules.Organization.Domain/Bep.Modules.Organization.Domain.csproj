@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Dominio del módulo: solo depende del SharedKernel. -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\Bep.SharedKernel\Bep.SharedKernel.csproj" />
+  </ItemGroup>
+
+</Project>

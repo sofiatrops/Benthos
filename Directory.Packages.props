@@ -1,0 +1,58 @@
+<Project>
+
+  <!--
+    Gestión centralizada de versiones de paquetes (Central Package Management).
+    Una sola fuente de verdad para versiones en toda la solución.
+
+    Nota de licencias (vigilar): MediatR >= 14 es comercial de pago. Se fija
+    la última versión libre (12.5.0, Apache 2.0). Reevaluar si se requiere
+    actualizar o migrar a una alternativa libre.
+  -->
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+  </PropertyGroup>
+
+  <ItemGroup Label="ASP.NET Core / Runtime">
+    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.5" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.5" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.5" />
+  </ItemGroup>
+
+  <ItemGroup Label="Entity Framework Core / PostgreSQL">
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.9" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.9" />
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.2" />
+    <PackageVersion Include="Npgsql" Version="10.0.3" />
+  </ItemGroup>
+
+  <ItemGroup Label="Aplicación (CQRS / validación)">
+    <PackageVersion Include="MediatR" Version="12.5.0" />
+    <PackageVersion Include="FluentValidation" Version="12.1.1" />
+    <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
+  </ItemGroup>
+
+  <ItemGroup Label="Observabilidad (Serilog / OpenTelemetry)">
+    <PackageVersion Include="Serilog.AspNetCore" Version="10.0.0" />
+    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.16.0" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.15.2" />
+    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.16.0" />
+  </ItemGroup>
+
+  <ItemGroup Label="Trabajos en segundo plano (Hangfire)">
+    <PackageVersion Include="Hangfire.AspNetCore" Version="1.8.23" />
+    <PackageVersion Include="Hangfire.PostgreSql" Version="1.21.1" />
+    <!-- Pin transitivo: Hangfire arrastra Newtonsoft.Json vulnerable (GHSA-5crp-9r3c-p9vr). -->
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup Label="Pruebas">
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageVersion Include="xunit" Version="2.9.3" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.4" />
+    <PackageVersion Include="coverlet.collector" Version="6.0.4" />
+    <PackageVersion Include="Testcontainers.PostgreSql" Version="4.12.0" />
+  </ItemGroup>
+
+</Project>
