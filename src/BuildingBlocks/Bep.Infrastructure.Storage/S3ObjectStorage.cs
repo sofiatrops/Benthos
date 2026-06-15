@@ -99,6 +99,31 @@ internal sealed class S3ObjectStorage(
         return Result.Success(new Uri(url));
     }
 
+    public async Task<Result<Stream>> AbrirLecturaAsync(string objectKey, CancellationToken cancellationToken)
+    {
+        if (tenantContext.TenantId is not { } tenantId)
+        {
+            return Result.Failure<Stream>(SinTenant());
+        }
+
+        if (!ObjectKeys.PerteneceA(objectKey, tenantId))
+        {
+            return Result.Failure<Stream>(Error.Forbidden(
+                "storage.acceso_denegado", "El objeto solicitado no pertenece a su organización."));
+        }
+
+        try
+        {
+            var response = await s3.GetObjectAsync(_options.Bucket, objectKey, cancellationToken);
+            return Result.Success(response.ResponseStream);
+        }
+        catch (AmazonS3Exception ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            return Result.Failure<Stream>(Error.NotFound(
+                "storage.objeto_no_encontrado", "El objeto solicitado no existe en el almacén."));
+        }
+    }
+
     private static Error SinTenant() => Error.Forbidden(
         "storage.sin_tenant", "No hay un tenant efectivo resuelto para la operación de almacenamiento.");
 }

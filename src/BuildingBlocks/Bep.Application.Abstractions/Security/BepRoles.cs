@@ -43,4 +43,10 @@ public static class BepPolicies
 
     /// <summary>Emisión de tickets de subida de archivos (personal Benthos con rol de contenido, ADR-008).</summary>
     public const string SubirArchivos = "storage:subir-archivos";
+
+    /// <summary>Ingesta y validación de resultados de laboratorio (revisor, coordinador, super-admin) (RF-04).</summary>
+    public const string GestionarResultados = "laboratory:gestionar-resultados";
+
+    /// <summary>Generación y validación de análisis de IA ambiental (revisor, coordinador, super-admin) (RF-06).</summary>
+    public const string GestionarAnalisis = "insights:gestionar-analisis";
 }

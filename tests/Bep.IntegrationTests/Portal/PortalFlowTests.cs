@@ -6,6 +6,10 @@ using Bep.Modules.Campaign.Application.Campanias.TransicionarEstado;
 using Bep.Modules.Campaign.Domain;
 using Bep.Modules.Campaign.Infrastructure;
 using Bep.Modules.Campaign.Infrastructure.Persistence;
+using Bep.Modules.Insights.Infrastructure;
+using Bep.Modules.Insights.Infrastructure.Persistence;
+using Bep.Modules.Laboratory.Infrastructure;
+using Bep.Modules.Laboratory.Infrastructure.Persistence;
 using Bep.Modules.Portal.Application;
 using Bep.Modules.Portal.Application.Dashboard;
 using Bep.Modules.Portal.Application.Informes;
@@ -16,6 +20,7 @@ using Bep.Modules.Reporting.Infrastructure;
 using Bep.Modules.Reporting.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Npgsql;
@@ -54,12 +59,16 @@ public sealed class PortalFlowTests : IAsyncLifetime
 
         await MigrarAsync<CampaignDbContext>(adminConnectionString, o => new CampaignDbContext(o, new NullTenantContext()));
         await MigrarAsync<ReportingDbContext>(adminConnectionString, o => new ReportingDbContext(o, new NullTenantContext()));
+        await MigrarAsync<LaboratoryDbContext>(adminConnectionString, o => new LaboratoryDbContext(o, new NullTenantContext()));
+        await MigrarAsync<InsightsDbContext>(adminConnectionString, o => new InsightsDbContext(o, new NullTenantContext()));
 
         await ExecuteAdminSqlAsync(adminConnectionString, $"""
             CREATE ROLE {AppRole} LOGIN PASSWORD '{AppPassword}' NOSUPERUSER NOBYPASSRLS;
-            GRANT USAGE ON SCHEMA campaign, reporting TO {AppRole};
+            GRANT USAGE ON SCHEMA campaign, reporting, laboratory, insights TO {AppRole};
             GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA campaign TO {AppRole};
             GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA reporting TO {AppRole};
+            GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA laboratory TO {AppRole};
+            GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA insights TO {AppRole};
             """);
 
         // El usuario autenticado del Portal es un cliente del tenant A.
@@ -70,6 +79,8 @@ public sealed class PortalFlowTests : IAsyncLifetime
             .AddSingleton<IObjectStorage, StubObjectStorage>()
             .AddCampaignModule(appConnectionString)
             .AddReportingModule(appConnectionString)
+            .AddLaboratoryModule(appConnectionString)
+            .AddInsightsModule(appConnectionString, new ConfigurationBuilder().Build())
             .AddPortalApplication()
             .BuildServiceProvider();
     }
@@ -265,5 +276,8 @@ public sealed class PortalFlowTests : IAsyncLifetime
 
         public Task<Result<Uri>> CrearUrlDescargaAsync(string objectKey, CancellationToken ct)
             => Task.FromResult(Result.Success(new Uri($"https://storage.local/{objectKey}")));
+
+        public Task<Result<Stream>> AbrirLecturaAsync(string objectKey, CancellationToken ct)
+            => Task.FromResult(Result.Success<Stream>(new MemoryStream()));
     }
 }

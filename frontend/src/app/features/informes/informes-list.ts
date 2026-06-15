@@ -28,7 +28,7 @@ import { InformeResumen, PagedResult } from '../../core/api/models';
           <tbody>
             @for (informe of p.items; track informe.id) {
               <tr>
-                <td><a [routerLink]="['/informes', informe.id]">{{ informe.titulo }}</a></td>
+                <td><a [routerLink]="['/portal/informes', informe.id]">{{ informe.titulo }}</a></td>
                 <td>{{ informe.tipoEstudio }}</td>
                 <td>{{ informe.periodoDesde | date: 'mediumDate' }} – {{ informe.periodoHasta | date: 'mediumDate' }}</td>
                 <td>v{{ informe.versionVigenteNumero }}</td>

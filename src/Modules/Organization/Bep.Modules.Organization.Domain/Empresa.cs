@@ -37,13 +37,31 @@ public sealed class Empresa : AggregateRoot<Guid>
     public IReadOnlyList<Centro> Centros => _centros.AsReadOnly();
 
     public static Empresa Registrar(string razonSocial, Rut rut, string rubro)
+        => Crear(Guid.NewGuid(), razonSocial, rut, rubro);
+
+    /// <summary>
+    /// Aprovisiona una empresa con identidad <b>preasignada</b>. Para escenarios en
+    /// que el <c>tenant_id</c> se acuña fuera del dominio antes de existir la empresa
+    /// (integración con el IdP / plano de control, migraciones, semillas de entorno).
+    /// </summary>
+    public static Empresa Provisionar(Guid id, string razonSocial, Rut rut, string rubro)
+    {
+        if (id == Guid.Empty)
+        {
+            throw new ArgumentException("La identidad preasignada de la empresa es obligatoria.", nameof(id));
+        }
+
+        return Crear(id, razonSocial, rut, rubro);
+    }
+
+    private static Empresa Crear(Guid id, string razonSocial, Rut rut, string rubro)
     {
         if (string.IsNullOrWhiteSpace(razonSocial))
         {
             throw new ArgumentException("La razón social es obligatoria.", nameof(razonSocial));
         }
 
-        var empresa = new Empresa(Guid.NewGuid(), razonSocial.Trim(), rut, rubro?.Trim() ?? string.Empty);
+        var empresa = new Empresa(id, razonSocial.Trim(), rut, rubro?.Trim() ?? string.Empty);
         empresa.RaiseDomainEvent(new EmpresaRegistrada(empresa.Id, empresa.RazonSocial));
         return empresa;
     }

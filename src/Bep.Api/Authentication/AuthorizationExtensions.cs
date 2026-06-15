@@ -28,7 +28,13 @@ public static class AuthorizationExtensions
             .AddPolicy(BepPolicies.SubirArchivos, policy =>
                 policy.RequireRole(
                     BepRoles.SuperAdministrador, BepRoles.CoordinadorOperaciones,
-                    BepRoles.RevisorTecnico, BepRoles.TecnicoTerreno));
+                    BepRoles.RevisorTecnico, BepRoles.TecnicoTerreno))
+            .AddPolicy(BepPolicies.GestionarResultados, policy =>
+                policy.RequireRole(
+                    BepRoles.SuperAdministrador, BepRoles.CoordinadorOperaciones, BepRoles.RevisorTecnico))
+            .AddPolicy(BepPolicies.GestionarAnalisis, policy =>
+                policy.RequireRole(
+                    BepRoles.SuperAdministrador, BepRoles.CoordinadorOperaciones, BepRoles.RevisorTecnico));
 
         return services;
     }

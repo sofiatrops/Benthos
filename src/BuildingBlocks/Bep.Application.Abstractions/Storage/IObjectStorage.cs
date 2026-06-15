@@ -27,6 +27,14 @@ public interface IObjectStorage
     /// pertenece al tenant efectivo.
     /// </summary>
     public Task<Result<Uri>> CrearUrlDescargaAsync(string objectKey, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Abre el contenido de un objeto del tenant actual para procesarlo en el servidor
+    /// (p. ej. parsear un CSV de laboratorio). El llamador es responsable de liberar el
+    /// <see cref="Stream"/>. Falla con <see cref="ErrorType.Forbidden"/> si la clave no
+    /// pertenece al tenant, o <see cref="ErrorType.NotFound"/> si el objeto no existe.
+    /// </summary>
+    public Task<Result<Stream>> AbrirLecturaAsync(string objectKey, CancellationToken cancellationToken);
 }
 
 /// <summary>Categorías lógicas de objeto; segundo segmento de la clave tras el tenant.</summary>

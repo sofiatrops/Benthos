@@ -21,6 +21,7 @@ export interface Dashboard {
   campanasActivas: number;
   ultimosInformesPublicados: InformeResumen[];
   kpis: Kpi[];
+  resumenAnalisis: string | null;
 }
 
 export interface PagedResult<T> {
@@ -34,6 +35,40 @@ export interface PortalAnexo {
   descripcion: string;
   fechaUtc: string;
   urlDescarga: string;
+}
+
+// --- Back-office (personal Benthos) ---
+
+export interface Empresa {
+  id: string;
+  razonSocial: string;
+  rut: string;
+  rubro: string;
+  activa: boolean;
+  creadaUtc: string;
+}
+
+export interface Centro {
+  id: string;
+  empresaId: string;
+  nombre: string;
+  codigoInterno: string;
+  latitud: number;
+  longitud: number;
+  region: string;
+  activo: boolean;
+}
+
+export interface Campania {
+  id: string;
+  empresaId: string;
+  nombre: string;
+  descripcion: string;
+  tipo: string;
+  estado: string;
+  fechaInicio: string;
+  fechaFin: string;
+  centroIds: string[];
 }
 
 export interface InformePublicadoDetalle {

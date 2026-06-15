@@ -131,6 +131,17 @@ y de forma **asíncrona** (worker), sin acoplar la lógica de negocio.
 - Cuando entre, la indisponibilidad de la IA no degrada el resto (RNF-FIAB-007,
   RNF-LIM-004).
 
+**Estado de implementación (M6 construido).** El módulo `Insights` implementa el
+patrón decidido: generador como **Strategy** (`IGeneradorAnalisis`) con dos
+adaptadores — **determinista** (por defecto, sin servicio externo, sin costo ni
+salida de datos) y **Claude/Anthropic** (config-gated por `Insights:Provider=claude`
++ clave). Por gobierno de datos solo se envían **estadísticas agregadas y
+de-identificadas** de parámetros (ni razón social, ni texto crudo de informes).
+Todo análisis nace en **Borrador** y exige **validación profesional** antes de ser
+visible al cliente (humano en el bucle, RF-06-007/010); el modelo usado queda
+registrado para trazabilidad. Pendiente al activar el LLM real: DPA, redacción
+adicional y ejecución asíncrona en el worker para llamadas lentas.
+
 ---
 
 ## ADR-007 — Read models para el Portal Cliente (CQRS read side)

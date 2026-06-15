@@ -11,6 +11,10 @@ using Bep.Modules.Audit.Infrastructure;
 using Bep.Modules.Audit.Infrastructure.Persistence;
 using Bep.Modules.Campaign.Infrastructure;
 using Bep.Modules.Campaign.Infrastructure.Persistence;
+using Bep.Modules.Insights.Infrastructure;
+using Bep.Modules.Insights.Infrastructure.Persistence;
+using Bep.Modules.Laboratory.Infrastructure;
+using Bep.Modules.Laboratory.Infrastructure.Persistence;
 using Bep.Modules.Organization.Infrastructure;
 using Bep.Modules.Organization.Infrastructure.Persistence;
 using Bep.Modules.Portal.Application;
@@ -32,6 +36,11 @@ var connectionString = builder.Configuration.GetConnectionString("Bep")
 
 builder.Services.AddOpenApi();
 builder.Services.AddProblemDetails();
+
+// Enums como texto en JSON (peticiones y respuestas): API más ergonómica para el
+// frontend (p. ej. tipo de campaña "Mixta" en lugar de un número).
+builder.Services.ConfigureHttpJsonOptions(options =>
+    options.SerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter()));
 
 // CORS para la SPA del Portal (Angular). Orígenes permitidos por configuración;
 // por defecto el dev server local. El token va en cabecera Bearer (sin cookies).
@@ -60,6 +69,8 @@ builder.Services.AddOrganizationModule(connectionString);
 builder.Services.AddCampaignModule(connectionString);
 builder.Services.AddSamplingModule(connectionString);
 builder.Services.AddReportingModule(connectionString);
+builder.Services.AddLaboratoryModule(connectionString);
+builder.Services.AddInsightsModule(connectionString, builder.Configuration);
 
 // M7 Portal Cliente: agrega lecturas de Campañas e Informes (sin persistencia propia).
 builder.Services.AddPortalApplication();
@@ -82,7 +93,13 @@ if (app.Environment.IsDevelopment())
         await scope.ServiceProvider.GetRequiredService<CampaignDbContext>().Database.MigrateAsync();
         await scope.ServiceProvider.GetRequiredService<SamplingDbContext>().Database.MigrateAsync();
         await scope.ServiceProvider.GetRequiredService<ReportingDbContext>().Database.MigrateAsync();
+        await scope.ServiceProvider.GetRequiredService<LaboratoryDbContext>().Database.MigrateAsync();
+        await scope.ServiceProvider.GetRequiredService<InsightsDbContext>().Database.MigrateAsync();
         await scope.ServiceProvider.GetRequiredService<AuditDbContext>().Database.MigrateAsync();
+
+        // Datos de demostración para el Portal (idempotente, solo Development).
+        var seedLogger = scope.ServiceProvider.GetRequiredService<ILoggerFactory>().CreateLogger("DevDataSeeder");
+        await Bep.Api.DevData.DevDataSeeder.SeedAsync(scope.ServiceProvider, seedLogger);
     }
 
     app.MapOpenApi();
@@ -128,6 +145,8 @@ app.MapOrganizationEndpoints();
 app.MapCampaignEndpoints();
 app.MapSamplingEndpoints();
 app.MapReportingEndpoints();
+app.MapLaboratoryEndpoints();
+app.MapInsightsEndpoints();
 app.MapPortalEndpoints();
 app.MapStorageEndpoints();
 

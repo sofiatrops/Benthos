@@ -28,6 +28,13 @@ import { Dashboard as DashboardDto } from '../../core/api/models';
         </article>
       </section>
 
+      @if (d.resumenAnalisis) {
+        <section class="analisis">
+          <h2>Análisis ambiental</h2>
+          <p>{{ d.resumenAnalisis }}</p>
+        </section>
+      }
+
       <h2>Últimos informes publicados</h2>
       @if (d.ultimosInformesPublicados.length === 0) {
         <p class="empty">Aún no hay informes publicados.</p>
@@ -35,7 +42,7 @@ import { Dashboard as DashboardDto } from '../../core/api/models';
         <ul class="lista">
           @for (informe of d.ultimosInformesPublicados; track informe.id) {
             <li>
-              <a [routerLink]="['/informes', informe.id]">{{ informe.titulo }}</a>
+              <a [routerLink]="['/portal/informes', informe.id]">{{ informe.titulo }}</a>
               <span class="meta">{{ informe.tipoEstudio }} · {{ informe.creadoUtc | date: 'mediumDate' }}</span>
             </li>
           }

@@ -8,7 +8,7 @@ import { InformePublicadoDetalle } from '../../core/api/models';
   selector: 'app-informe-detail',
   imports: [RouterLink, DatePipe],
   template: `
-    <a routerLink="/informes" class="volver">← Volver a informes</a>
+    <a routerLink="/portal/informes" class="volver">← Volver a informes</a>
 
     @if (error()) {
       <p class="error">{{ error() }}</p>

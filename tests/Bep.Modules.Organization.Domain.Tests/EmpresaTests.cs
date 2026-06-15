@@ -26,6 +26,25 @@ public sealed class EmpresaTests
     }
 
     [Fact]
+    public void Provisionar_uses_preassigned_identity()
+    {
+        var id = Guid.NewGuid();
+
+        var empresa = Empresa.Provisionar(id, "Salmonera Austral S.A.", Rut.Create("76000001-9"), "Acuicultura");
+
+        Assert.Equal(id, empresa.Id);
+        Assert.True(empresa.Activa);
+        Assert.Contains(empresa.DomainEvents, e => e is EmpresaRegistrada);
+    }
+
+    [Fact]
+    public void Provisionar_rejects_empty_identity()
+    {
+        Assert.Throws<ArgumentException>(() =>
+            Empresa.Provisionar(Guid.Empty, "Salmonera Austral S.A.", Rut.Create("76000001-9"), "Acuicultura"));
+    }
+
+    [Fact]
     public void AgregarCentro_links_centro_to_empresa_tenant()
     {
         var empresa = NuevaEmpresa();

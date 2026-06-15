@@ -1,5 +1,3 @@
-using Amazon.S3;
-using Amazon.S3.Util;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -12,7 +10,7 @@ namespace Bep.Infrastructure.Storage;
 /// bucket se aprovisiona por infraestructura y esta opción permanece desactivada.
 /// </summary>
 internal sealed class ObjectStorageBucketInitializer(
-    IAmazonS3 s3,
+    IServiceProvider services,
     IOptions<ObjectStorageOptions> options,
     ILogger<ObjectStorageBucketInitializer> logger) : IHostedService
 {
@@ -27,13 +25,12 @@ internal sealed class ObjectStorageBucketInitializer(
 
         try
         {
-            if (!await AmazonS3Util.DoesS3BucketExistV2Async(s3, _options.Bucket))
-            {
-                await s3.PutBucketAsync(_options.Bucket, cancellationToken);
-                logger.LogInformation("Bucket de almacenamiento '{Bucket}' creado.", _options.Bucket);
-            }
+            await ObjectStorageProvisioner.EnsureBucketAsync(services, cancellationToken);
+            logger.LogInformation("Bucket de almacenamiento '{Bucket}' asegurado.", _options.Bucket);
         }
-        catch (AmazonS3Exception ex)
+#pragma warning disable CA1031 // El aprovisionamiento del bucket nunca debe abortar el arranque (almacén caído, red, etc.).
+        catch (Exception ex)
+#pragma warning restore CA1031
         {
             // No abortar el arranque por el aprovisionamiento del bucket; se registra y continúa.
             logger.LogWarning(ex, "No se pudo asegurar el bucket '{Bucket}' al arrancar.", _options.Bucket);

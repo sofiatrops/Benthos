@@ -1,6 +1,8 @@
 using Bep.Application.Abstractions;
 using Bep.Application.Abstractions.Messaging;
 using Bep.Modules.Campaign.Application.Abstractions;
+using Bep.Modules.Insights.Application.Abstractions;
+using Bep.Modules.Laboratory.Application.Abstractions;
 using Bep.Modules.Portal.Application.Common;
 using Bep.Modules.Reporting.Application.Abstractions;
 using Bep.Modules.Reporting.Application.Informes;
@@ -13,16 +15,19 @@ public sealed record PortalDashboardQuery : IQuery<DashboardDto>;
 public sealed record DashboardDto(
     int CampanasActivas,
     IReadOnlyList<InformeResumenDto> UltimosInformesPublicados,
-    IReadOnlyList<KpiDto> Kpis);
+    IReadOnlyList<KpiDto> Kpis,
+    string? ResumenAnalisis);
 
-/// <summary>Indicador clave ambiental. Se poblará a partir de M4 (Laboratorios) y M6 (IA).</summary>
+/// <summary>Indicador clave ambiental. Se alimenta de M4 (Laboratorios); más adelante también de M6 (IA).</summary>
 public sealed record KpiDto(string Nombre, double Valor, string Unidad);
 
 internal sealed class PortalDashboardHandler(
     ICurrentUser currentUser,
     ITenantContext tenantContext,
     ICampaignReadService campaignReadService,
-    IReportingReadService reportingReadService)
+    IReportingReadService reportingReadService,
+    ILaboratoryReadService laboratoryReadService,
+    IInsightsReadService insightsReadService)
     : IQueryHandler<PortalDashboardQuery, DashboardDto>
 {
     private const int UltimosInformes = 5;
@@ -41,8 +46,13 @@ internal sealed class PortalDashboardHandler(
         var publicados = await reportingReadService.ListPublicadosAsync(
             empresaId, new PublicadosFilter(), new PageRequest(1, UltimosInformes), cancellationToken);
 
-        // Los KPIs ambientales dependen de datos de parámetros (M4 Laboratorios / M6 IA),
-        // aún no disponibles; se entregan vacíos por ahora.
-        return Result.Success(new DashboardDto(campanasActivas, publicados.Items, []));
+        // KPIs ambientales derivados de los lotes de laboratorio validados (RF-07-005).
+        var kpisLab = await laboratoryReadService.GetKpisAsync(empresaId, cancellationToken);
+        var kpis = kpisLab.Select(k => new KpiDto(k.Nombre, k.Valor, k.Unidad)).ToList();
+
+        // Solo se muestra el análisis de IA si un profesional lo validó (RF-06-007).
+        var analisis = await insightsReadService.GetUltimoValidadoAsync(empresaId, cancellationToken);
+
+        return Result.Success(new DashboardDto(campanasActivas, publicados.Items, kpis, analisis?.Resumen));
     }
 }

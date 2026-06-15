@@ -27,6 +27,9 @@ public static class AuthenticationExtensions
                 // En desarrollo se permite HTTP hacia Keycloak; en producción
                 // siempre HTTPS (RNF-SEG-001).
                 options.RequireHttpsMetadata = keycloak.GetValue("RequireHttpsMetadata", true);
+                // Sin el mapeo legacy de claims: el manejador moderno expande el claim
+                // 'roles' (array de Keycloak) en claims individuales y conserva 'sub'.
+                options.MapInboundClaims = false;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,

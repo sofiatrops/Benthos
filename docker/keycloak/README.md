@@ -31,11 +31,11 @@ curl -s http://localhost:8080/realms/bep/protocol/openid-connect/token \
 Úsalo como `Authorization: Bearer <token>` contra la API (`http://localhost:8081`).
 Verifica el contexto resuelto con `GET /api/v1/me`.
 
-## Importante: enlazar el `tenant_id` del cliente con una empresa real
+## Enlace `tenant_id` ↔ empresa demo (automático en Development)
 
-El `tenant_id` del usuario `cliente` es un GUID fijo de marcador. Para un flujo
-end-to-end del Portal, ese GUID debe corresponder al `Id` de una empresa
-registrada. Como `RegistrarEmpresa` genera el `Id`, tras crear la empresa hay que
-actualizar el atributo `tenant_id` del usuario (consola de Keycloak →
-Users → cliente → Attributes) con el `Id` devuelto. La siembra automática de una
-empresa demo con `Id` fijo queda como mejora futura.
+El `tenant_id` del usuario `cliente` (`00000000-0000-0000-0000-0000000000a1`) lo
+**aprovisiona automáticamente** la API en Development: al arrancar siembra una
+empresa demo con ese `Id` fijo, dos centros, campañas activas y un informe
+publicado con su PDF en MinIO (`DevDataSeeder`). Así el Portal muestra datos
+reales —incluida la descarga firmada— sin pasos manuales. En producción el
+`tenant_id` se asigna al aprovisionar la empresa (`Empresa.Provisionar`).

@@ -1,0 +1,74 @@
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.tabla th,
+.tabla td {
+  text-align: left;
+  padding: 0.6rem 0.5rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.tabla th {
+  color: #475569;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem 2rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.meta dt {
+  color: #64748b;
+  font-size: 0.8rem;
+}
+
+.meta dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.descarga {
+  display: inline-block;
+  margin: 0.5rem 0 1.5rem;
+}
+
+.anexos {
+  list-style: none;
+  padding: 0;
+}
+
+.anexos li {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.volver {
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: #0f766e;
+}
+
+.fecha {
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.empty,
+.paginacion,
+.cargando {
+  color: #64748b;
+}
+
+.error {
+  color: #b91c1c;
+}/*# sourceMappingURL=informes.css.map */

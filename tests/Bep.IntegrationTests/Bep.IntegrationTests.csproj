@@ -26,6 +26,8 @@
     <ProjectReference Include="..\..\src\Modules\Campaign\Bep.Modules.Campaign.Infrastructure\Bep.Modules.Campaign.Infrastructure.csproj" />
     <ProjectReference Include="..\..\src\Modules\Sampling\Bep.Modules.Sampling.Infrastructure\Bep.Modules.Sampling.Infrastructure.csproj" />
     <ProjectReference Include="..\..\src\Modules\Reporting\Bep.Modules.Reporting.Infrastructure\Bep.Modules.Reporting.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Laboratory\Bep.Modules.Laboratory.Infrastructure\Bep.Modules.Laboratory.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Insights\Bep.Modules.Insights.Infrastructure\Bep.Modules.Insights.Infrastructure.csproj" />
     <ProjectReference Include="..\..\src\Modules\Portal\Bep.Modules.Portal.Application\Bep.Modules.Portal.Application.csproj" />
   </ItemGroup>
 

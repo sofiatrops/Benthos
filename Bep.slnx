@@ -18,6 +18,16 @@
     <Project Path="src/Modules/Campaign/Bep.Modules.Campaign.Domain/Bep.Modules.Campaign.Domain.csproj" />
     <Project Path="src/Modules/Campaign/Bep.Modules.Campaign.Infrastructure/Bep.Modules.Campaign.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/src/Modules/Insights/">
+    <Project Path="src/Modules/Insights/Bep.Modules.Insights.Application/Bep.Modules.Insights.Application.csproj" />
+    <Project Path="src/Modules/Insights/Bep.Modules.Insights.Domain/Bep.Modules.Insights.Domain.csproj" />
+    <Project Path="src/Modules/Insights/Bep.Modules.Insights.Infrastructure/Bep.Modules.Insights.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Laboratory/">
+    <Project Path="src/Modules/Laboratory/Bep.Modules.Laboratory.Application/Bep.Modules.Laboratory.Application.csproj" />
+    <Project Path="src/Modules/Laboratory/Bep.Modules.Laboratory.Domain/Bep.Modules.Laboratory.Domain.csproj" />
+    <Project Path="src/Modules/Laboratory/Bep.Modules.Laboratory.Infrastructure/Bep.Modules.Laboratory.Infrastructure.csproj" />
+  </Folder>
   <Folder Name="/src/Modules/Organization/">
     <Project Path="src/Modules/Organization/Bep.Modules.Organization.Application/Bep.Modules.Organization.Application.csproj" />
     <Project Path="src/Modules/Organization/Bep.Modules.Organization.Domain/Bep.Modules.Organization.Domain.csproj" />
@@ -39,6 +49,8 @@
   <Folder Name="/tests/">
     <Project Path="tests/Bep.IntegrationTests/Bep.IntegrationTests.csproj" />
     <Project Path="tests/Bep.Modules.Campaign.Domain.Tests/Bep.Modules.Campaign.Domain.Tests.csproj" />
+    <Project Path="tests/Bep.Modules.Insights.Domain.Tests/Bep.Modules.Insights.Domain.Tests.csproj" />
+    <Project Path="tests/Bep.Modules.Laboratory.Domain.Tests/Bep.Modules.Laboratory.Domain.Tests.csproj" />
     <Project Path="tests/Bep.Modules.Organization.Domain.Tests/Bep.Modules.Organization.Domain.Tests.csproj" />
     <Project Path="tests/Bep.Modules.Reporting.Domain.Tests/Bep.Modules.Reporting.Domain.Tests.csproj" />
     <Project Path="tests/Bep.Modules.Sampling.Domain.Tests/Bep.Modules.Sampling.Domain.Tests.csproj" />

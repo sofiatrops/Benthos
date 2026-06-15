@@ -9,7 +9,7 @@ login OIDC contra Keycloak.
 > Diseño y decisiones: ver [docs/arquitectura/](docs/arquitectura/).
 > Requisitos: `SRS_Benthos.pdf` (SRS-BENTHOS-PLATFORM-001).
 
-## Estado: Fase 1 (MVP vertical) ✅ — 79 pruebas en verde
+## Estado: Fase 1 + M4 Laboratorios + M6 IA Ambiental ✅ — 107 pruebas en verde
 
 Cadena de valor end-to-end, aislada por tenant (RLS) y auditada:
 **empresa → campaña → muestra trazable por cadena de custodia → informe versionado
@@ -22,8 +22,10 @@ Módulos vivos:
 | **M1 Organización** | Empresas (tenants) y centros (PostGIS), CQRS + RBAC. |
 | **M2 Campañas** | Ciclo de vida con máquina de estados, responsables, calendario. |
 | **M3 Muestras** | Código único + QR, GPS, historial de eventos, cadena de custodia, consulta por QR. |
+| **M4 Laboratorios** | Ingesta de resultados CSV (Strategy/parser), validación profesional, KPIs; encadena trazabilidad por código de muestra. |
 | **M5 Informes** | Versionado de PDF, flujo de revisión/aprobación/publicación, comentarios internos, archivado lógico. |
-| **M7 Portal Cliente** | Dashboard, informes publicados, descarga — tenant derivado del JWT (RF-07-010). |
+| **M6 IA Ambiental** | Análisis asistido por IA sobre resultados validados (proveedor pluggable: determinista o Claude), con validación profesional obligatoria (RF-06-007). |
+| **M7 Portal Cliente** | Dashboard (KPIs de M4 + resumen de IA de M6), informes publicados, descarga — tenant derivado del JWT (RF-07-010). |
 | **M8 Auditoría** | Tabla append-only inmutable (trigger) alimentada por eventos de dominio. |
 
 Fundaciones (Fase 0): monolito modular .NET 10, **RLS** de dos capas (interceptor
@@ -37,10 +39,13 @@ hace `PUT`/`GET` directo al almacén. Las claves viven bajo el prefijo del tenan
 los comandos validan la pertenencia de cada `objectKey` a la empresa. Subida con
 validación de tipo de contenido y tamaño.
 
-**Fuera de alcance actual** (Fase 2 / transversales): M4 Laboratorios, M6 IA;
-escaneo antivirus de archivos subidos (ADR-008, p. ej. ClamAV en el Worker);
-notificaciones; gestión de usuarios cliente (Keycloak); KPIs/series temporales
-(dependen de M4/M6); frontend Angular.
+**Fuera de alcance actual** (transversales / mejoras): LLM real de M6 en producción
+(requiere clave, DPA y ejecución asíncrona en el Worker; hoy por defecto generador
+determinista); ingesta de Excel y adaptadores API por laboratorio (hoy CSV);
+validación cruzada de los códigos de muestra contra M3; escaneo antivirus de
+archivos subidos (ADR-008, p. ej. ClamAV en el Worker); notificaciones; gestión de
+usuarios cliente (Keycloak); series temporales; back-office Angular y PWA de captura
+en terreno.
 
 ## Requisitos
 
@@ -72,11 +77,18 @@ docker compose up -d postgres keycloak minio   # dependencias
 dotnet run --project src/Bep.Api                # aplica migraciones en Development
 ```
 
-## Frontend — Portal Cliente (Angular 20)
+## Frontend — Sitio web (Angular 20)
 
 SPA standalone en [frontend/](frontend/). Login OIDC (Authorization Code + PKCE)
-contra Keycloak; el access token se adjunta a las llamadas a la API. Vistas:
-panel, informes publicados y detalle con **descarga por URL firmada** (ADR-008).
+contra Keycloak; el access token se adjunta a las llamadas a la API. Tres áreas:
+
+| Ruta | Área | Acceso |
+|------|------|--------|
+| `/` | **Inicio** público (landing): presenta la plataforma y da acceso | Público |
+| `/portal` | **Portal Cliente**: panel (KPIs + resumen de IA), informes, descarga firmada | `principal_type=client` |
+| `/admin` | **Back-office** de personal Benthos: empresas, centros, campañas | personal Benthos |
+
+Tras iniciar sesión, el inicio dirige a cada usuario a su área según el rol.
 
 ```bash
 cd frontend
@@ -85,9 +97,13 @@ npm start                     # http://localhost:4200 (llama a la API en :8081 v
 ```
 
 Requiere la API (`:8081`), Keycloak (`:8080`) y MinIO (`:9000`) arriba. Inicie
-sesión con un usuario de prueba del realm (ver
-[docker/keycloak/README.md](docker/keycloak/README.md)); el portal es exclusivo de
-usuarios de empresa cliente (`principal_type=client`).
+sesión con un usuario de prueba del realm (`cliente` → portal, `staff` → back-office;
+ver [docker/keycloak/README.md](docker/keycloak/README.md)).
+
+> **Datos demo:** en Development la API siembra al arrancar una empresa con `Id`
+> fijo (= `tenant_id` del usuario `cliente`), centros, campañas e **un informe
+> publicado con PDF en MinIO**, de modo que el Portal muestra contenido real y la
+> descarga firmada funciona de extremo a extremo sin pasos manuales.
 
 ## Pruebas
 
@@ -118,6 +134,6 @@ src/
 tests/                   Pruebas de dominio e integración (aislamiento RLS)
 docker/                  Dockerfiles e inicialización de PostgreSQL
 docs/arquitectura/       Dossier de decisiones (ADR), dominio, seguridad, plan
-frontend/                Portal Cliente en Angular 20 (SPA standalone, OIDC)
+frontend/                Sitio web Angular 20 (inicio público + portal cliente + back-office)
 docker/keycloak/         Realm import (cliente, roles, mappers, usuarios de prueba)
 ```

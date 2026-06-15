@@ -10,6 +10,8 @@
     <ProjectReference Include="..\..\..\BuildingBlocks\Bep.Application.Abstractions\Bep.Application.Abstractions.csproj" />
     <ProjectReference Include="..\..\Campaign\Bep.Modules.Campaign.Application\Bep.Modules.Campaign.Application.csproj" />
     <ProjectReference Include="..\..\Reporting\Bep.Modules.Reporting.Application\Bep.Modules.Reporting.Application.csproj" />
+    <ProjectReference Include="..\..\Laboratory\Bep.Modules.Laboratory.Application\Bep.Modules.Laboratory.Application.csproj" />
+    <ProjectReference Include="..\..\Insights\Bep.Modules.Insights.Application\Bep.Modules.Insights.Application.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,72 @@
+<header class="site-header">
+  <div class="brand">
+    <span class="logo">🌊</span>
+    <span>Benthos</span>
+  </div>
+  <nav class="site-nav">
+    <a href="#plataforma">Plataforma</a>
+    <a href="#capacidades">Capacidades</a>
+    @if (isAuthenticated()) {
+      <button type="button" class="link" (click)="irAMiArea()">
+        {{ isClient() ? 'Mi portal' : 'Panel' }}
+      </button>
+      <button type="button" class="ghost" (click)="logout()">Salir ({{ username() }})</button>
+    } @else {
+      <button type="button" class="primary" (click)="acceder()">Iniciar sesión</button>
+    }
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>Monitoreo ambiental con trazabilidad de extremo a extremo</h1>
+    <p>
+      Plataforma de Benthos para gestionar campañas, muestras, laboratorios e informes
+      ambientales — desde el registro en terreno hasta el portal del cliente, con cada
+      dato aislado por organización y auditado.
+    </p>
+    <div class="cta">
+      <button type="button" class="primary lg" (click)="acceder()">
+        {{ isAuthenticated() ? (isClient() ? 'Ir a mi portal' : 'Ir al panel') : 'Acceder' }}
+      </button>
+      <a class="lg ghost" href="#capacidades">Conocer más</a>
+    </div>
+  </section>
+
+  <section id="plataforma" class="bloque">
+    <h2>Una sola plataforma para todo el ciclo ambiental</h2>
+    <p class="intro">
+      Empresa → campaña → muestra trazable por cadena de custodia → resultados de
+      laboratorio → análisis e informes → portal del cliente.
+    </p>
+  </section>
+
+  <section id="capacidades" class="capacidades">
+    <article class="cap">
+      <h3>Trazabilidad total</h3>
+      <p>Cada muestra con código único y QR, geolocalizada, con su cadena de custodia e historial.</p>
+    </article>
+    <article class="cap">
+      <h3>Laboratorios e indicadores</h3>
+      <p>Ingesta de resultados, validación profesional y KPIs ambientales por campaña.</p>
+    </article>
+    <article class="cap">
+      <h3>Análisis asistido por IA</h3>
+      <p>Resúmenes y hallazgos automáticos, siempre revisados por un profesional antes de publicarse.</p>
+    </article>
+    <article class="cap">
+      <h3>Portal del cliente</h3>
+      <p>Informes publicados y descargas seguras, con aislamiento estricto por organización.</p>
+    </article>
+  </section>
+
+  <section class="cta-final">
+    <h2>¿Listo para entrar?</h2>
+    <button type="button" class="primary lg" (click)="acceder()">Iniciar sesión</button>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <span>Benthos Environmental Platform</span>
+  <span>© 2026 Benthos</span>
+</footer>
