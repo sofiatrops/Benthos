@@ -14,6 +14,9 @@ public interface ICampaignReadService
         CampaniaFilter filter,
         PageRequest page,
         CancellationToken cancellationToken = default);
+
+    /// <summary>Cuenta las campañas activas (no cerradas ni canceladas) de una empresa, para el dashboard (RF-07-002).</summary>
+    public Task<int> CountActivasAsync(Guid empresaId, CancellationToken cancellationToken = default);
 }
 
 /// <summary>Criterios de filtrado del listado/calendario de campañas (RF-02-006).</summary>

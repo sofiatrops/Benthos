@@ -34,10 +34,30 @@ internal sealed class ReportingReadService(ReportingDbContext dbContext) : IRepo
     }
 
     public Task<PagedResult<InformeResumenDto>> ListPublicadosAsync(
-        Guid empresaId, PageRequest page, CancellationToken cancellationToken = default)
+        Guid empresaId, PublicadosFilter filter, PageRequest page, CancellationToken cancellationToken = default)
     {
         var query = dbContext.Set<Informe>().AsNoTracking()
             .Where(i => i.TenantId == empresaId && i.Estado == EstadoInforme.Publicado);
+
+        if (filter.TipoEstudio is { } tipo)
+        {
+            query = query.Where(i => i.TipoEstudio == tipo);
+        }
+
+        if (filter.CentroId is { } centroId)
+        {
+            query = query.Where(i => i.CentroId == centroId);
+        }
+
+        if (filter.Desde is { } desde)
+        {
+            query = query.Where(i => i.Periodo.Hasta >= desde);
+        }
+
+        if (filter.Hasta is { } hasta)
+        {
+            query = query.Where(i => i.Periodo.Desde <= hasta);
+        }
 
         return PaginarResumenAsync(query, page, cancellationToken);
     }

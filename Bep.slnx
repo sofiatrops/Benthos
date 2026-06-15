@@ -6,6 +6,7 @@
   <Folder Name="/src/BuildingBlocks/">
     <Project Path="src/BuildingBlocks/Bep.Application.Abstractions/Bep.Application.Abstractions.csproj" />
     <Project Path="src/BuildingBlocks/Bep.Infrastructure.Common/Bep.Infrastructure.Common.csproj" />
+    <Project Path="src/BuildingBlocks/Bep.Infrastructure.Storage/Bep.Infrastructure.Storage.csproj" />
     <Project Path="src/BuildingBlocks/Bep.SharedKernel/Bep.SharedKernel.csproj" />
   </Folder>
   <Folder Name="/src/Modules/" />
@@ -22,6 +23,9 @@
     <Project Path="src/Modules/Organization/Bep.Modules.Organization.Domain/Bep.Modules.Organization.Domain.csproj" />
     <Project Path="src/Modules/Organization/Bep.Modules.Organization.Infrastructure/Bep.Modules.Organization.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/src/Modules/Portal/">
+    <Project Path="src/Modules/Portal/Bep.Modules.Portal.Application/Bep.Modules.Portal.Application.csproj" />
+  </Folder>
   <Folder Name="/src/Modules/Reporting/">
     <Project Path="src/Modules/Reporting/Bep.Modules.Reporting.Application/Bep.Modules.Reporting.Application.csproj" />
     <Project Path="src/Modules/Reporting/Bep.Modules.Reporting.Domain/Bep.Modules.Reporting.Domain.csproj" />
@@ -36,6 +40,7 @@
     <Project Path="tests/Bep.IntegrationTests/Bep.IntegrationTests.csproj" />
     <Project Path="tests/Bep.Modules.Campaign.Domain.Tests/Bep.Modules.Campaign.Domain.Tests.csproj" />
     <Project Path="tests/Bep.Modules.Organization.Domain.Tests/Bep.Modules.Organization.Domain.Tests.csproj" />
+    <Project Path="tests/Bep.Modules.Reporting.Domain.Tests/Bep.Modules.Reporting.Domain.Tests.csproj" />
     <Project Path="tests/Bep.Modules.Sampling.Domain.Tests/Bep.Modules.Sampling.Domain.Tests.csproj" />
   </Folder>
 </Solution>

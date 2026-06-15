@@ -24,7 +24,9 @@ services:
 
   keycloak:
     image: quay.io/keycloak/keycloak:26.1
-    command: start-dev
+    # Importa el realm 'bep' (cliente, roles, mappers de claims y usuarios de
+    # prueba) en el primer arranque; idempotente en arranques posteriores.
+    command: start-dev --import-realm
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN:-admin}
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
@@ -32,6 +34,13 @@ services:
       KC_HEALTH_ENABLED: "true"
     ports:
       - "8080:8080"
+    volumes:
+      - ./docker/keycloak:/opt/keycloak/data/import:ro
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/localhost/9000 && echo -e 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3 && cat <&3 | grep -q '200 OK'"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
 
   minio:
     image: minio/minio:latest
@@ -60,6 +69,12 @@ services:
       Keycloak__Authority: ${KEYCLOAK_AUTHORITY:-http://keycloak:8080/realms/bep}
       Keycloak__Audience: ${KEYCLOAK_AUDIENCE:-bep-api}
       Keycloak__RequireHttpsMetadata: "false"
+      ObjectStorage__ServiceUrl: ${OBJECTSTORAGE_SERVICEURL:-http://minio:9000}
+      ObjectStorage__Bucket: ${OBJECTSTORAGE_BUCKET:-bep}
+      ObjectStorage__AccessKey: ${MINIO_ROOT_USER:-minioadmin}
+      ObjectStorage__SecretKey: ${MINIO_ROOT_PASSWORD:-minioadmin}
+      ObjectStorage__ForcePathStyle: "true"
+      ObjectStorage__CrearBucketSiNoExiste: "true"
       OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-}
     ports:
       - "8081:8080"
@@ -68,6 +83,8 @@ services:
         condition: service_healthy
       keycloak:
         condition: service_started
+      minio:
+        condition: service_healthy
 
   worker:
     build:

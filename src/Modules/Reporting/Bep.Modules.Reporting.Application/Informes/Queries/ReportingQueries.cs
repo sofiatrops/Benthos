@@ -49,7 +49,7 @@ internal sealed class ListarPublicadosHandler(IReportingReadService readService,
     {
         tenantContext.SetTenant(query.EmpresaId);
         var page = new PageRequest(query.Page, query.PageSize);
-        var result = await readService.ListPublicadosAsync(query.EmpresaId, page, cancellationToken);
+        var result = await readService.ListPublicadosAsync(query.EmpresaId, new PublicadosFilter(), page, cancellationToken);
         return Result.Success(result);
     }
 }

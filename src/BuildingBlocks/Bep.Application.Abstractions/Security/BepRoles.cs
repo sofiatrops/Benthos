@@ -31,4 +31,16 @@ public static class BepPolicies
 
     /// <summary>Registro y manejo de muestras en terreno y laboratorio (técnico, coordinador, super-admin).</summary>
     public const string GestionarMuestras = "sampling:gestionar-muestras";
+
+    /// <summary>Gestión y revisión de informes (revisor, coordinador, super-admin).</summary>
+    public const string GestionarInformes = "reporting:gestionar-informes";
+
+    /// <summary>Archivado (eliminación lógica) de informes, restringido a roles administrativos (RF-05-010).</summary>
+    public const string ArchivarInformes = "reporting:archivar-informes";
+
+    /// <summary>Acceso al Portal Cliente, exclusivo de usuarios de empresa cliente (RF-07-001).</summary>
+    public const string PortalCliente = "portal:cliente";
+
+    /// <summary>Emisión de tickets de subida de archivos (personal Benthos con rol de contenido, ADR-008).</summary>
+    public const string SubirArchivos = "storage:subir-archivos";
 }

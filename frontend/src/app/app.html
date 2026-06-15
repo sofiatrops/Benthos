@@ -1,0 +1,31 @@
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">🌊</span>
+    <span>Benthos · Portal Cliente</span>
+  </div>
+
+  @if (auth.isAuthenticated()) {
+    <nav class="nav">
+      <a routerLink="/dashboard" routerLinkActive="active">Panel</a>
+      <a routerLink="/informes" routerLinkActive="active">Informes</a>
+    </nav>
+    <div class="session">
+      <span class="user">{{ auth.username() }}</span>
+      <button type="button" class="link" (click)="auth.logout()">Salir</button>
+    </div>
+  } @else {
+    <button type="button" class="primary" (click)="auth.login()">Iniciar sesión</button>
+  }
+</header>
+
+<main class="content">
+  @if (auth.isAuthenticated()) {
+    <router-outlet />
+  } @else {
+    <section class="welcome">
+      <h1>Portal de monitoreo ambiental</h1>
+      <p>Acceda con su cuenta para consultar campañas e informes publicados de su organización.</p>
+      <button type="button" class="primary" (click)="auth.login()">Iniciar sesión</button>
+    </section>
+  }
+</main>

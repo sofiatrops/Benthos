@@ -6,12 +6,16 @@ using Bep.Api.Observability;
 using Bep.Api.Tenancy;
 using Bep.Application.Abstractions;
 using Bep.Infrastructure.Common.DependencyInjection;
+using Bep.Infrastructure.Storage;
 using Bep.Modules.Audit.Infrastructure;
 using Bep.Modules.Audit.Infrastructure.Persistence;
 using Bep.Modules.Campaign.Infrastructure;
 using Bep.Modules.Campaign.Infrastructure.Persistence;
 using Bep.Modules.Organization.Infrastructure;
 using Bep.Modules.Organization.Infrastructure.Persistence;
+using Bep.Modules.Portal.Application;
+using Bep.Modules.Reporting.Infrastructure;
+using Bep.Modules.Reporting.Infrastructure.Persistence;
 using Bep.Modules.Sampling.Infrastructure;
 using Bep.Modules.Sampling.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -28,12 +32,25 @@ var connectionString = builder.Configuration.GetConnectionString("Bep")
 
 builder.Services.AddOpenApi();
 builder.Services.AddProblemDetails();
+
+// CORS para la SPA del Portal (Angular). Orígenes permitidos por configuración;
+// por defecto el dev server local. El token va en cabecera Bearer (sin cookies).
+const string spaCorsPolicy = "bep-spa";
+var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
+    ?? ["http://localhost:4200"];
+builder.Services.AddCors(options => options.AddPolicy(spaCorsPolicy, policy => policy
+    .WithOrigins(allowedOrigins)
+    .AllowAnyHeader()
+    .AllowAnyMethod()));
 builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
 builder.Services.AddBepAuthentication(builder.Configuration);
 builder.Services.AddBepAuthorization();
 
 // Aislamiento multi-tenant: contexto de tenant + interceptor RLS (ADR-004).
 builder.Services.AddBepTenancy();
+
+// Almacenamiento de objetos S3-compatible con URLs firmadas (ADR-008).
+builder.Services.AddBepObjectStorage(builder.Configuration);
 
 // Auditoría persistente por eventos de dominio (M8).
 builder.Services.AddAuditModule(connectionString);
@@ -42,6 +59,10 @@ builder.Services.AddAuditModule(connectionString);
 builder.Services.AddOrganizationModule(connectionString);
 builder.Services.AddCampaignModule(connectionString);
 builder.Services.AddSamplingModule(connectionString);
+builder.Services.AddReportingModule(connectionString);
+
+// M7 Portal Cliente: agrega lecturas de Campañas e Informes (sin persistencia propia).
+builder.Services.AddPortalApplication();
 
 builder.Services.AddHealthChecks()
     .AddCheck<DatabaseReadinessHealthCheck>("database", tags: ["ready"]);
@@ -60,6 +81,7 @@ if (app.Environment.IsDevelopment())
         await scope.ServiceProvider.GetRequiredService<OrganizationDbContext>().Database.MigrateAsync();
         await scope.ServiceProvider.GetRequiredService<CampaignDbContext>().Database.MigrateAsync();
         await scope.ServiceProvider.GetRequiredService<SamplingDbContext>().Database.MigrateAsync();
+        await scope.ServiceProvider.GetRequiredService<ReportingDbContext>().Database.MigrateAsync();
         await scope.ServiceProvider.GetRequiredService<AuditDbContext>().Database.MigrateAsync();
     }
 
@@ -78,6 +100,8 @@ app.Use(async (context, next) =>
 });
 
 app.UseHttpsRedirection();
+
+app.UseCors(spaCorsPolicy);
 
 app.UseAuthentication();
 app.UseBepTenantResolution();
@@ -103,6 +127,9 @@ app.MapGet("/api/v1/me", (ICurrentUser currentUser, ITenantContext tenantContext
 app.MapOrganizationEndpoints();
 app.MapCampaignEndpoints();
 app.MapSamplingEndpoints();
+app.MapReportingEndpoints();
+app.MapPortalEndpoints();
+app.MapStorageEndpoints();
 
 app.Run();
 

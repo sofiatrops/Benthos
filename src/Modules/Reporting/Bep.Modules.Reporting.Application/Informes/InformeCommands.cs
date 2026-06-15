@@ -1,18 +1,41 @@
 using Bep.Application.Abstractions;
 using Bep.Application.Abstractions.Messaging;
+using Bep.Application.Abstractions.Storage;
 using Bep.Modules.Reporting.Application.Abstractions;
 using Bep.Modules.Reporting.Domain;
+using FluentValidation;
 
 namespace Bep.Modules.Reporting.Application.Informes;
 
 /// <summary>Carga una nueva versión del PDF del informe (RF-05-002).</summary>
 public sealed record CargarVersionCommand(Guid EmpresaId, Guid InformeId, string ObjectKey) : ICommand;
 
+public sealed class CargarVersionValidator : AbstractValidator<CargarVersionCommand>
+{
+    public CargarVersionValidator()
+    {
+        RuleFor(c => c.ObjectKey).NotEmpty()
+            .Must((c, key) => ObjectKeys.PerteneceA(key, c.EmpresaId))
+            .WithMessage("La clave del archivo no pertenece a la empresa indicada.");
+    }
+}
+
 /// <summary>Agrega un comentario interno de revisión, no visible para el cliente (RF-05-004).</summary>
 public sealed record AgregarComentarioCommand(Guid EmpresaId, Guid InformeId, string Texto) : ICommand;
 
 /// <summary>Anexa un documento complementario al informe (RF-05-009).</summary>
 public sealed record AgregarAnexoCommand(Guid EmpresaId, Guid InformeId, string ObjectKey, string Descripcion) : ICommand;
+
+public sealed class AgregarAnexoValidator : AbstractValidator<AgregarAnexoCommand>
+{
+    public AgregarAnexoValidator()
+    {
+        RuleFor(c => c.ObjectKey).NotEmpty()
+            .Must((c, key) => ObjectKeys.PerteneceA(key, c.EmpresaId))
+            .WithMessage("La clave del archivo no pertenece a la empresa indicada.");
+        RuleFor(c => c.Descripcion).NotEmpty().MaximumLength(500);
+    }
+}
 
 /// <summary>Avanza el flujo de revisión/publicación de un informe (RF-05-003).</summary>
 public sealed record TransicionarEstadoInformeCommand(Guid EmpresaId, Guid InformeId, EstadoInforme NuevoEstado) : ICommand;

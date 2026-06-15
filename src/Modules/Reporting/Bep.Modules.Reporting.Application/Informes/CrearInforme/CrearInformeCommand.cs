@@ -1,5 +1,6 @@
 using Bep.Application.Abstractions;
 using Bep.Application.Abstractions.Messaging;
+using Bep.Application.Abstractions.Storage;
 using Bep.Modules.Reporting.Application.Abstractions;
 using Bep.Modules.Reporting.Domain;
 using FluentValidation;
@@ -27,6 +28,10 @@ public sealed class CrearInformeValidator : AbstractValidator<CrearInformeComman
         RuleFor(c => c.PeriodoHasta).GreaterThanOrEqualTo(c => c.PeriodoDesde)
             .WithMessage("El fin del período no puede ser anterior al inicio.");
         RuleFor(c => c.PrimeraVersionObjectKey).NotEmpty().WithMessage("Se requiere el PDF de la primera versión.");
+        RuleFor(c => c.PrimeraVersionObjectKey)
+            .Must((c, key) => ObjectKeys.PerteneceA(key, c.EmpresaId))
+            .When(c => !string.IsNullOrEmpty(c.PrimeraVersionObjectKey))
+            .WithMessage("La clave del archivo no pertenece a la empresa indicada.");
     }
 }
 

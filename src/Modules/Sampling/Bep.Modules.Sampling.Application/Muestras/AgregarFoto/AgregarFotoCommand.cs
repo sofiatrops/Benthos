@@ -1,6 +1,8 @@
 using Bep.Application.Abstractions;
 using Bep.Application.Abstractions.Messaging;
+using Bep.Application.Abstractions.Storage;
 using Bep.Modules.Sampling.Application.Abstractions;
+using FluentValidation;
 
 namespace Bep.Modules.Sampling.Application.Muestras.AgregarFoto;
 
@@ -10,6 +12,16 @@ namespace Bep.Modules.Sampling.Application.Muestras.AgregarFoto;
 /// en la capa de presentación/almacenamiento; aquí solo se registra la referencia.
 /// </summary>
 public sealed record AgregarFotoCommand(Guid EmpresaId, Guid MuestraId, string ObjectKey) : ICommand;
+
+public sealed class AgregarFotoValidator : AbstractValidator<AgregarFotoCommand>
+{
+    public AgregarFotoValidator()
+    {
+        RuleFor(c => c.ObjectKey).NotEmpty()
+            .Must((c, key) => ObjectKeys.PerteneceA(key, c.EmpresaId))
+            .WithMessage("La clave de la foto no pertenece a la empresa indicada.");
+    }
+}
 
 internal sealed class AgregarFotoHandler(
     IMuestraRepository repository,

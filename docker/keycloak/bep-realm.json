@@ -1,0 +1,125 @@
+{
+  "realm": "bep",
+  "enabled": true,
+  "sslRequired": "none",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "accessTokenLifespan": 900,
+  "roles": {
+    "realm": [
+      { "name": "super-admin", "description": "Personal Benthos: administración global (cross-tenant explícito)." },
+      { "name": "coordinador", "description": "Personal Benthos: planificación y operación." },
+      { "name": "tecnico", "description": "Personal Benthos: captura en terreno y laboratorio." },
+      { "name": "revisor", "description": "Personal Benthos: revisión y aprobación de informes." },
+      { "name": "admin-empresa", "description": "Usuario cliente: administración de su empresa." },
+      { "name": "usuario-cliente", "description": "Usuario cliente: acceso de lectura al portal." }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "bep-api",
+      "name": "BEP API + SPA",
+      "description": "Cliente público (Authorization Code + PKCE) y audiencia del Resource Server.",
+      "enabled": true,
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "redirectUris": [
+        "http://localhost:4200/*",
+        "http://localhost:8081/*"
+      ],
+      "webOrigins": [
+        "http://localhost:4200",
+        "http://localhost:8081"
+      ],
+      "attributes": {
+        "post.logout.redirect.uris": "http://localhost:4200/*"
+      },
+      "protocolMappers": [
+        {
+          "name": "audience-bep-api",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "config": {
+            "included.client.audience": "bep-api",
+            "id.token.claim": "false",
+            "access.token.claim": "true"
+          }
+        },
+        {
+          "name": "realm-roles-flat",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "config": {
+            "claim.name": "roles",
+            "jsonType.label": "String",
+            "multivalued": "true",
+            "access.token.claim": "true",
+            "id.token.claim": "false",
+            "userinfo.token.claim": "false"
+          }
+        },
+        {
+          "name": "tenant_id",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "config": {
+            "user.attribute": "tenant_id",
+            "claim.name": "tenant_id",
+            "jsonType.label": "String",
+            "access.token.claim": "true",
+            "id.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        },
+        {
+          "name": "principal_type",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "config": {
+            "user.attribute": "principal_type",
+            "claim.name": "principal_type",
+            "jsonType.label": "String",
+            "access.token.claim": "true",
+            "id.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        }
+      ]
+    }
+  ],
+  "users": [
+    {
+      "username": "staff",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "staff@benthos.cl",
+      "firstName": "Personal",
+      "lastName": "Benthos",
+      "attributes": {
+        "principal_type": ["benthos"]
+      },
+      "credentials": [
+        { "type": "password", "value": "bep", "temporary": false }
+      ],
+      "realmRoles": ["super-admin", "coordinador", "revisor", "tecnico"]
+    },
+    {
+      "username": "cliente",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "cliente@empresa-demo.cl",
+      "firstName": "Usuario",
+      "lastName": "Cliente Demo",
+      "attributes": {
+        "principal_type": ["client"],
+        "tenant_id": ["00000000-0000-0000-0000-0000000000a1"]
+      },
+      "credentials": [
+        { "type": "password", "value": "bep", "temporary": false }
+      ],
+      "realmRoles": ["admin-empresa", "usuario-cliente"]
+    }
+  ]
+}

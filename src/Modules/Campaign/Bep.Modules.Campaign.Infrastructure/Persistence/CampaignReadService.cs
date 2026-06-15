@@ -60,6 +60,14 @@ internal sealed class CampaignReadService(CampaignDbContext dbContext) : ICampai
         return new PagedResult<CampaniaDto>(items, page.NormalizedPage, page.NormalizedPageSize, total);
     }
 
+    public Task<int> CountActivasAsync(Guid empresaId, CancellationToken cancellationToken = default)
+    {
+        var activos = new[] { EstadoCampania.Planificada, EstadoCampania.EnCurso, EstadoCampania.EnRevision };
+        return dbContext.Set<Campania>().AsNoTracking()
+            .Where(c => c.TenantId == empresaId && activos.Contains(c.Estado))
+            .CountAsync(cancellationToken);
+    }
+
     private static CampaniaDto ToDto(Campania c)
         => new(
             c.Id,
